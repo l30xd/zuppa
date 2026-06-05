@@ -2,7 +2,7 @@ import json
 import httpx
 from typing import Any
 
-from app.core.config import settings
+from app.core import settings
 
 
 SYSTEM_PROMPT = """Eres un chef profesional experto en cocina latinoamericana y mundial.

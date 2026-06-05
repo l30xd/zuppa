@@ -2,9 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.core.config import settings
-from app.core.database import engine, Base
-from app.routers import ingredients, recipes
+from app.core import settings, engine, Base
+from app.api import router
 
 
 @asynccontextmanager
@@ -30,8 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(ingredients.router, prefix="/api/ingredients",  tags=["Ingredientes"])
-app.include_router(recipes.router,     prefix="/api/recipes",      tags=["Recetas"])
+app.include_router(router, prefix="/api")
 
 
 @app.get("/api/health", tags=["Health"])

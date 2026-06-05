@@ -1,10 +1,12 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Any, Optional
 from sqlalchemy import String, Boolean, DateTime, ForeignKey, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
+from pydantic import BaseModel, Field, ConfigDict
 
-from app.core.database import Base
+from app.core import Base
 
 
 def utcnow():
@@ -54,3 +56,54 @@ class RecipeHistory(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     user: Mapped["User"] = relationship(back_populates="recipe_history")
+
+
+# -----------------
+# Pydantic schemas
+# -----------------
+
+
+class IngredientCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=150)
+    quantity: Optional[str] = Field(default=None, max_length=100)
+    category: Optional[str] = Field(default=None, max_length=80)
+
+
+class IngredientUpdate(BaseModel):
+    quantity: Optional[str] = None
+    category: Optional[str] = None
+
+
+class IngredientOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    name: str
+    quantity: Optional[str]
+    category: Optional[str]
+    created_at: datetime
+
+
+class RecipePreferences(BaseModel):
+    time: str = Field(default="media", pattern="^(rapida|media|elaborada)$")
+    difficulty: str = Field(default="media", pattern="^(facil|media|avanzada)$")
+    diet: str = Field(default="ninguna")
+    count: int = Field(default=2, ge=1, le=5)
+
+
+class RecipeGenerateRequest(BaseModel):
+    preferences: RecipePreferences = RecipePreferences()
+
+
+class RecipeHistoryOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    title: str
+    ingredients_used: Optional[list[str]]
+    preferences: Optional[dict[str, Any]]
+    result: dict[str, Any]
+    is_favorite: bool
+    created_at: datetime
+
+
+class FavoriteToggle(BaseModel):
+    is_favorite: bool
