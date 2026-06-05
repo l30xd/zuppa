@@ -22,4 +22,5 @@ export const recipesAPI = {
   toggleFavorite: (id, is_favorite) =>
     api.patch(`/recipes/history/${id}/favorite`, { is_favorite }),
   deleteHistory: (id) => api.delete(`/recipes/history/${id}`),
+  deleteHistoryAll: () => api.delete('/recipes/history'),
 }

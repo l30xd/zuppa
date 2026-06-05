@@ -30,6 +30,14 @@ export default function HistoryPage() {
     setRecipes(prev => prev.filter(r => r.id !== id))
   }
 
+  const clearHistory = async () => {
+    if (recipes.length === 0) return
+    const confirmed = window.confirm('¿Eliminar todo el historial? Esta acción no se puede deshacer.')
+    if (!confirmed) return
+    await recipesAPI.deleteHistoryAll()
+    setRecipes([])
+  }
+
   return (
     <div className={styles.layout}>
       <aside className={styles.sidebar}>
@@ -45,6 +53,14 @@ export default function HistoryPage() {
             <input type="checkbox" checked={favOnly} onChange={e => setFavOnly(e.target.checked)} />
             Solo favoritos ★
           </label>
+          <button
+            className={hStyles.clearBtn}
+            onClick={clearHistory}
+            disabled={recipes.length === 0}
+            type="button"
+          >
+            Borrar historial
+          </button>
         </div>
 
         <div className={hStyles.stat}>

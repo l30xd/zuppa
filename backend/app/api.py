@@ -253,3 +253,13 @@ async def delete_history_entry(
     if not record:
         raise HTTPException(status_code=404, detail="Receta no encontrada.")
     await db.delete(record)
+
+
+@router.delete("/recipes/history", status_code=status.HTTP_204_NO_CONTENT)
+async def clear_history(
+    current_user: User = Depends(get_default_user),
+    db: AsyncSession = Depends(get_db),
+):
+    await db.execute(
+        delete(RecipeHistory).where(RecipeHistory.user_id == current_user.id)
+    )

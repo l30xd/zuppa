@@ -45,3 +45,25 @@
   transition: all 0.2s;
 }
 .deleteBtn:hover { border-color: var(--red); color: var(--red); }
+
+.clearBtn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.clearBtn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.clearBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--border);
+}
